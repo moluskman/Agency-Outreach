@@ -11,7 +11,7 @@ def main():
         email="john.doe@example.com",
         phone="123-456-7890",
     )
-    print(f"Lead created: {lead.business_name}")
+    print(lead)
 
 
 if __name__ == "__main__":
