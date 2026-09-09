@@ -19,7 +19,9 @@ class Lead:
         self.phone = phone
 
     def is_contactable(self):
-        return bool(self.email or self.phone)
+        has_email = bool(self.email and self.email.strip())
+        has_phone = bool(self.phone and self.phone.strip())
+        return has_email or has_phone
 
     def __repr__(self):
         return (
