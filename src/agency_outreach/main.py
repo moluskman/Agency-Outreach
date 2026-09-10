@@ -8,9 +8,10 @@ def main():
         has_website=True,
         website_quality=8,
         contact_name="John Doe",
-        email="john.doe@example.com",
         phone="123-456-7890",
     )
+    print(f"lead.email value: {lead.email!r}")
+    print(f"lead.is_contactable(): {lead.is_contactable()}")
     print(lead)
 
 

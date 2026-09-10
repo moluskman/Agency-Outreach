@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, Float, Integer, String
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, validates
 
 Base = declarative_base()
 
@@ -18,22 +18,16 @@ class Lead(Base):
     email = Column(String, default="")
     phone = Column(String, default="")
 
-    def __init__(self, **kwargs):
-        if "email" in kwargs and not isinstance(kwargs["email"], str):
-            kwargs["email"] = ""
-        if "phone" in kwargs and not isinstance(kwargs["phone"], str):
-            kwargs["phone"] = ""
-        super().__init__(**kwargs)
+    @validates("email", "phone")
+    def validate_contact_info(self, key: str, value: object) -> str:
+        """Normalize non-string or None values to an empty string."""
+        if not isinstance(value, str):
+            return ""
+        return value
 
     def is_contactable(self) -> bool:
         """Return True when the lead has either an email or a phone number."""
-        has_email = bool(
-            self.email and isinstance(self.email, str) and self.email.strip()
-        )
-        has_phone = bool(
-            self.phone and isinstance(self.phone, str) and self.phone.strip()
-        )
-        return has_email or has_phone
+        return bool((self.email or "").strip() or (self.phone or "").strip())
 
     def __repr__(self) -> str:
         return (
