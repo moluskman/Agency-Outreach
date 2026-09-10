@@ -1,31 +1,44 @@
-class Lead:
+from dataclasses import dataclass
 
-    def __init__(
-        self,
-        business_name: str,
-        website: str | None,
-        has_website: bool,
-        website_quality: float,
-        contact_name: str,
-        email: str,
-        phone: str,
-    ) -> None:
-        self.business_name = business_name
-        self.website = website
-        self.has_website = has_website
-        self.website_quality = website_quality
-        self.contact_name = contact_name
-        self.email = email
-        self.phone = phone
+
+@dataclass
+class Lead:
+    """Represents a sales lead with contact and website information."""
+
+    business_name: str
+    website: str | None
+    has_website: bool
+    website_quality: float
+    contact_name: str
+    email: str = ""
+    phone: str = ""
+
+    def __post_init__(self) -> None:
+        # Normalize non-string/None input (e.g. NaN from pandas) to ""
+        if not isinstance(self.email, str):
+            self.email = ""
+        if not isinstance(self.phone, str):
+            self.phone = ""
 
     def is_contactable(self) -> bool:
-        has_email = bool(self.email and self.email.strip())
-        has_phone = bool(self.phone and self.phone.strip())
-        return has_email or has_phone
+        """Return True when the lead has either an email or a phone number."""
+        return bool(self.email.strip() or self.phone.strip())
 
-    def __repr__(self) -> str:
-        return (
-            f"Lead(business_name={self.business_name!r}, website={self.website!r}, "
-            f"has_website={self.has_website}, website_quality={self.website_quality}, "
-            f"contact_name={self.contact_name!r}, email={self.email!r}, phone={self.phone!r})"
-        )
+
+@dataclass
+class CategoryScore:
+    name: str
+    score: float
+    max_score: float
+    findings: list[str]  # e.g. ["No clear booking CTA"]
+
+
+@dataclass
+class WebsiteAnalysis:
+    categories: list[CategoryScore]
+    strengths: list[str]
+    weaknesses: list[str]
+
+    @property
+    def overall_score(self) -> float:
+        return sum(c.score for c in self.categories)
