@@ -25,20 +25,4 @@ class Lead:
         return bool(self.email.strip() or self.phone.strip())
 
 
-@dataclass
-class CategoryScore:
-    name: str
-    score: float
-    max_score: float
-    findings: list[str]  # e.g. ["No clear booking CTA"]
 
-
-@dataclass
-class WebsiteAnalysis:
-    categories: list[CategoryScore]
-    strengths: list[str]
-    weaknesses: list[str]
-
-    @property
-    def overall_score(self) -> float:
-        return sum(c.score for c in self.categories)
