@@ -24,4 +24,4 @@ def test_is_contactable_edge_cases(email, phone, expected):
         email=email,
         phone=phone,
     )
-    assert lead.is_contactable() is expected
+    assert lead.is_contactable() == expected
